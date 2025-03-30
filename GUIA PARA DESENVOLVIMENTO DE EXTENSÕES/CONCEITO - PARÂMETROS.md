@@ -6,17 +6,17 @@ Existem parâmetros de diversos tipos com N possibilidades de manipulação, ver
 
 # 📝 Guia para criação de um parâmetro
 ---
-Acessando o menu de parâmetros:
+### Acessando o menu de parâmetros:
 ![Menu parâmetros](screenshots/Screenshot_4.png)
 
-Criando um parâmetro:
+### Criando um parâmetro:
 ![Criando parâmetro](screenshots/Screenshot_1.png)
 
 # 📝 Guia para configuração do parâmetro
 ---
 ![Configurando parâmetro](screenshots/Screenshot_7.png)
 
-Campos de cadastro do parâmetro:
+### Campos de cadastro do parâmetro:
 - Nome: nome do parâmetro, utilizado para chamar o parâmetro no código fonte.
 - Descrição: descrição do parâmetro, é o texto que aparece para o usuário.
 - Dica de preenchimento: texto que é exibido ao passar o mouse por cima do icone de interrogação.
@@ -32,7 +32,8 @@ Campos de cadastro do parâmetro:
 
 # 📝 Guia para escolher o tipo de parâmetro
 ---
-Primeiramente veremos os tipos de parâmetros disponíveis:
+### Primeiramente veremos os tipos de parâmetros disponíveis:
+
 📂 Parâmetro do tipo Arquivo:
 - Permite passar um arquivo para entrada de dados, utilizado em scripts de importações.
 - Este parâmetro irá retornar uma variável do tipo 'Arquivo' ou 'File'.
@@ -86,13 +87,13 @@ Exemplo de preenchimento para todos os tipos de parâmetros disponíveis:
 
 # ⚙️ Consultando e manipulando os parâmetros no código fonte
 ---
-Anotações e diferenças ao consumir o conteúdo de um parâmetro:
+### Anotações e diferenças ao consumir o conteúdo de um parâmetro:
 - A chamada do parâmetro acontece através da palavra reservada **'parametros'**.
 - O acesso ao conteúdo do parâmetro acontece através do atributo **'valor'**.
 - O acesso da *Lista Múltipla* acontece através do atributo **'selecionados'** aninhado com o atributo **'valor'**.
 - O acesso da *Lista Simples* acontece através do atributo **'selecionado'** aninhado com o atributo **'valor'**.
 
-Segue as diferenças entre as chamadas dos parâmetros:
+### Segue as diferenças entre as chamadas dos parâmetros:
 ```
 // Lista Simples de matrícula (selecionado)
 matricula = parametros.matricula.selecionado.valor
@@ -102,7 +103,7 @@ matriculas = parametros.matriculas.selecionados.valor
 nome = parametros.nome.valor
 ``` 
 
-Chamada de parâmetros e tipagens das classes:
+### Chamada de parâmetros e tipagens das classes:
 ```
 // ====== Declarando os parâmetros de entrada ======
 selecaoAvancada = parametros.selecaoAvancada?.selecionados?.valor // TIPO -> Lista Múltipla
@@ -150,8 +151,8 @@ imprimir "Conteudo: " + salario + ", Classe: " +  salario.getClass()
 
 # 📚 Exemplos de parâmetros comumente utilizados na Vertical Pessoal
 ---
-Exemplo de um parâmetro para consulta de matrículas:
+### Exemplo de um parâmetro para consulta de matrículas:
 ![Consulta matrícula](screenshots/Screenshot_2.png)
 
-Exemplo de um parâmetro para consulta de seleção avançada:
+### Exemplo de um parâmetro para consulta de seleção avançada:
 ![Consulta matrícula](screenshots/Screenshot_3.png)

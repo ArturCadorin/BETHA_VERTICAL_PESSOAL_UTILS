@@ -36,38 +36,47 @@ Primeiramente veremos os tipos de parâmetros disponíveis:
 📂 Parâmetro do tipo Arquivo:
 - Permite passar um arquivo para entrada de dados, utilizado em scripts de importações.
 - Este parâmetro irá retornar uma variável do tipo 'Arquivo' ou 'File'.
+  
 ⌨️ Parâmetro do tipo Caracteres:
 - Permite livre digitação no parâmetro, utilizado para campos de observações, usuário e entre outros.
 - Este parâmetro irá retornar uma variável do tipo 'String'.
+  
 📅 Parâmetro do tipo Data:
 - Seleciona a data no formato calendário, muito utilizado para filtros de competência.
 - O parâmetro Data fornece a data completa que foi selecionada.
 - Este parâmetro irá retornar uma variável do tipo 'Date'.
+  
 📅 Parâmetro do tipo Data e Hora:
 - Seleciona a data e hora no formato calendário, utilizado para filtros mais especificos.
 - O parâmetro Data e Hora fornece a data completa, incluindo também hora, minutos e segundos.
 - Este parâmetro irá retornar uma variável do tipo 'Date'.
+  
 🔢 Parâmetro do tipo Inteiro:
 - Permite que seja inserido apenas números no parâmetro, utilizado em campos como ID e entre outros.
 - Este parâmetro irá retornar uma variável do tipo 'Long'.
+  
 📋 Parâmetro do tipo Lista Multipla:
 - Normalmente é um dos tipos de parâmetros mais utilizados.
 - Comumente utilizado para consultas dinâmicas (fontes dinâmicas).
 - Permite que seja inserido multiplos itens na seleção do parâmetro, como por exemplo 2 ou 3 matrículas em uma execução só.
 - Este parâmetro irá retornar uma variável do tipo 'List' ou 'Array'.
+  
 📋 Parâmetro do tipo Lista Simples:     
 - Normalmente é um dos tipos de parâmetros mais utilizados.
 - Utilizado tanto para consultas dinâmicas quanto para seleção de itens já definidos (valor estático).
 - Pode ser utilizado para manipular constantes e enumeradores.
 - Permite que seja inserido multiplos itens na seleção do parâmetro, como por exemplo 2 ou 3 matrículas em uma execução só.
 - Este parâmetro irá retornar uma variável do tipo 'List' ou 'Array'.
+  
 📅 Parâmetro do tipo Mês/Ano:
 - Seleciona o mês e ano no formato calendário, utilizado para filtros mais especificos como competência de cálculo da folha.
 - Este parâmetro irá retornar uma variável do tipo 'YearMonth'.
+  
 🔑 Parâmetro do tipo Senha:
 - Este tipo de parâmetro oculta o conteúdo que está sendo inserido.
 - Permite livre digitação no parâmetro, utilizado para campos de senhas ou para dados que não devem ser exibidos.
 - Este parâmetro irá retornar uma variável do tipo 'String'.
+  
 💰 Parâmetro do tipo Valor:
 - Permite inserir valores já formatadas, como por exemplo campos do tipo salário, taxa e entre outros.
 - Este parâmetro irá retornar uma variável do tipo 'Double'.

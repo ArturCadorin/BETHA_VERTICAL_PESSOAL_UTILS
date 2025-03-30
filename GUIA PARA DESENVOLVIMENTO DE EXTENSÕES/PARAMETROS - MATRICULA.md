@@ -10,7 +10,7 @@ Consultar a matrícula que foi selecionada no parâmetro.
 
 # ⚙️ Utilizando e manipulando o parâmetro de matrícula
 ---
-### Existem diversas maneiras de fazer uso do parâmetro de matrículas, o exemplo abaixo é apenas uma forma de manipular o parâmetro.
+### 🧑‍💻 Existem diversas maneiras de fazer uso do parâmetro de matrículas, o exemplo abaixo é apenas uma forma de manipular o parâmetro.
 ``` 
 // Declarando a fonte dinâmica de matrículas
 fonteMatriculas = Dados.pessoal.v2.matriculas;

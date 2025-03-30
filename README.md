@@ -37,9 +37,9 @@
 # 💡 COMO REALIZAR O DOWNLOAD DO REPOSITÓRIO:
 ---
 ### 🧑‍💻 Realizar o download de todo o repositório:
-#### ⬇️ Com a página do repositório aberta, clicar no botão '<> Code' >> Download ZIP
+#### ⬇️ Com a página do repositório aberta, clicar no botão <> Code >> Download ZIP
 ![Download repo](screenshots/Screenshot_1.png)
 
 ### 🧑‍💻 Realizar o download de arquivos individualmente:
-#### ⬇️ Com o arquivo desejado aberto, clicar no icone superior direito '...' >> Download (Ctrl + Shift + S)
+#### ⬇️ Com o arquivo desejado aberto, clicar no icone superior direito ... >> Download (Ctrl + Shift + S)
 ![Download repo](screenshots/Screenshot_2.png)

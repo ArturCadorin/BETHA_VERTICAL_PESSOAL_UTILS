@@ -2,7 +2,8 @@
 ---
 ## Finalidade
 Consultar e manipular um arquivo fornecido como entrada de dados. Muito utilizado em scripts de manipulação de arquivos e importações de dados.
-## Guia para criação do parâmetro
+# 📝 Guia para criação do parâmetro
+---
 ### 🧑‍💻 Criando um parâmetro:
 ![Criando parâmetro](screenshots/Screenshot_1.png)
 ### 🧑‍💻 Configurando parâmetro para ler o arquivo:

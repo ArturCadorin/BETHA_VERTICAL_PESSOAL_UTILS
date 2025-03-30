@@ -7,7 +7,9 @@ Aqui iremos abordar o básico referente consultas em fontes dinâmicas.
 A fonte dinâmica nada mais é do que uma consulta ao banco de dados da entidade selecionada, existem alguns filtros e propriedades que podemos usar:
 
 **🔍 - Critério:** é o filtro de consulta e pode ser utilizado de N maneiras, podemos representa-lo pelo comando WHERE do SQL.
+
 *Ex: "matricula.id = ${matricula} and competencia = '${competencia}'"*
+
 *Resumindo: consultar aonde o ID da matrícula seja igual a variável 'matricula' e a competência seja igual a variável 'competencia'*
 ```
 // Parâmetro de entrada 

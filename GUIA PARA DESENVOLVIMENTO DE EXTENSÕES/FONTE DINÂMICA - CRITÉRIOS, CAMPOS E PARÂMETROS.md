@@ -26,6 +26,10 @@ fonteRemuneracoes.buscaComEventos(criterio: filtroCriterio).each{ folha ->
 ```
 
 **🖨️ - Campos:** campos consultados no banco de dados, podemos representa-lo pelas colunas das tabelas SQL.
+
+- *Ex: campos: "id, situacao, pessoa(nome), dataInicioContrato"
+- 
+- *Resumindo: consultar as colunas ID, situacao, nome do cadastro de pessoa e dataInicioContrato*
 ```
 // Parâmetro de entrada
 matricula = parametros.matricula?.selecionados?.valor

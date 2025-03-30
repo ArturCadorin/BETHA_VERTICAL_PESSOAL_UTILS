@@ -30,6 +30,7 @@
 
 ### 📂 SCRIPTS - FOLHA:
 - Modelos de scripts.
+- Funções e métodos para Service Layer.
 - Scripts de **Consulta**.
 - Scripts de **Alterações**.
 - Scripts de **Importações**.

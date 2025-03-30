@@ -24,11 +24,11 @@
 - Exemplos de fontes dinâmicas.
 - Funções e métodos uteis.
 
-### 📊 RELATÓRIOS - FOLHA:
+### 📊 RELATÓRIOS - FOLHA/RH/PONTO:
 - Modelos de fonte dinâmicas.
 - Modelos de arquivos Jasper.
 
-### </> SCRIPTS - FOLHA:
+### </> SCRIPTS - FOLHA/RH:
 - Modelos de scripts.
 - Funções e métodos para Service Layer.
 - Scripts de **Consulta**.

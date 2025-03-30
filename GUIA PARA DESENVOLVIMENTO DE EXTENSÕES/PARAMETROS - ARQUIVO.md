@@ -3,14 +3,14 @@
 ## Finalidade
 Consultar e manipular um arquivo fornecido como entrada de dados. Muito utilizado em scripts de manipulação de arquivos e importações de dados.
 ## Guia para criação do parâmetro
-Criando um parâmetro:
+### 🧑‍💻 Criando um parâmetro:
 ![Criando parâmetro](screenshots/Screenshot_1.png)
-Configurando parâmetro para ler o arquivo:
+### 🧑‍💻 Configurando parâmetro para ler o arquivo:
 ![Parâmetro Arquivo](screenshots/Screenshot_6.png)
 
 # ⚙️ Utilizando e manipulando o parâmetro de arquivo
 ---
-Consumindo e manipulando um arquivo fornecida via parâmetro.
+### Consumindo e manipulando um arquivo fornecido através do parâmetro.
 ```
 // Declarando o parâmetro de entrada do tipo .CSV
 def arquivo = Arquivo.ler(parametros.arquivo.valor, 'csv', [encoding: 'iso-8859-1'] )

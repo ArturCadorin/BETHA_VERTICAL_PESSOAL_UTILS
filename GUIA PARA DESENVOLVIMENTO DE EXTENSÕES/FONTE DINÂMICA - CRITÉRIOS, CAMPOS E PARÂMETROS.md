@@ -9,7 +9,6 @@ A fonte dinâmica nada mais é do que uma consulta ao banco de dados da entidade
 **🔍 - Critério:** é o filtro de consulta e pode ser utilizado de N maneiras, podemos representa-lo pelo comando WHERE do SQL.
 
 - *Ex: "matricula.id = ${matricula} and competencia = '${competencia}'"*
-
 - *Resumindo: consultar aonde o ID da matrícula seja igual a variável 'matricula' e a competência seja igual a variável 'competencia'*
 ```
 // Parâmetro de entrada 
@@ -28,7 +27,6 @@ fonteRemuneracoes.buscaComEventos(criterio: filtroCriterio).each{ folha ->
 **🖨️ - Campos:** campos consultados no banco de dados, podemos representa-lo pelas colunas das tabelas SQL.
 
 - *Ex: campos: "id, situacao, pessoa(nome), dataInicioContrato"
-- 
 - *Resumindo: consultar as colunas ID, situacao, nome do cadastro de pessoa e dataInicioContrato*
 ```
 // Parâmetro de entrada

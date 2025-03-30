@@ -1,4 +1,5 @@
-# 🌐 REPOSITÓRIO DE UTILITÁRIOS DA VERTICAL PESSOAL - BETHA SISTEMAS 🏢
+# 🌐 REPOSITÓRIO DE UTILITÁRIOS
+# 👥 VERTICAL PESSOAL - BETHA SISTEMAS 🏢
 ---
 - 💡 Guia de como baixar o repositório logo ao final do README!
 - 🔄 Repositório ainda está sendo atualizado! 🔄

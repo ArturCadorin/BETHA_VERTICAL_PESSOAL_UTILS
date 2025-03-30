@@ -6,10 +6,10 @@ Existem parâmetros de diversos tipos com N possibilidades de manipulação, ver
 
 # 📝 Guia para criação de um parâmetro
 ---
-### Acessando o menu de parâmetros:
+### 🧑‍💻 Acessando o menu de parâmetros:
 ![Menu parâmetros](screenshots/Screenshot_4.png)
 
-### Criando um parâmetro:
+### 🧑‍💻 Criando um parâmetro:
 ![Criando parâmetro](screenshots/Screenshot_1.png)
 
 # 📝 Guia para configuração do parâmetro
@@ -93,7 +93,7 @@ Existem parâmetros de diversos tipos com N possibilidades de manipulação, ver
 - O acesso da *Lista Múltipla* acontece através do atributo **'selecionados'** aninhado com o atributo **'valor'**.
 - O acesso da *Lista Simples* acontece através do atributo **'selecionado'** aninhado com o atributo **'valor'**.
 
-### 💻 Segue as diferenças entre as chamadas dos parâmetros:
+### 🧑‍💻 Segue as diferenças entre as chamadas dos parâmetros:
 ```
 // Lista Simples de matrícula (selecionado)
 matricula = parametros.matricula.selecionado.valor
@@ -103,7 +103,7 @@ matriculas = parametros.matriculas.selecionados.valor
 nome = parametros.nome.valor
 ``` 
 
-### 💻 Chamada de parâmetros e tipagens das classes:
+### 🧑‍💻 Chamada de parâmetros e tipagens das classes:
 ```
 // ====== Declarando os parâmetros de entrada ======
 selecaoAvancada = parametros.selecaoAvancada?.selecionados?.valor // TIPO -> Lista Múltipla

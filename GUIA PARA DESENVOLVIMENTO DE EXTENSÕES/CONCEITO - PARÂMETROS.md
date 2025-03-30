@@ -82,7 +82,7 @@ Existem parâmetros de diversos tipos com N possibilidades de manipulação, ver
 - Permite inserir valores já formatadas, como por exemplo campos do tipo salário, taxa e entre outros.
 - Este parâmetro irá retornar uma variável do tipo 'Double'.
 
-Exemplo de preenchimento para todos os tipos de parâmetros disponíveis:
+### Exemplo de preenchimento para todos os tipos de parâmetros disponíveis:
 ![Preenchimento parâmetros](screenshots/Screenshot_5.png)
 
 # ⚙️ Consultando e manipulando os parâmetros no código fonte
@@ -93,7 +93,7 @@ Exemplo de preenchimento para todos os tipos de parâmetros disponíveis:
 - O acesso da *Lista Múltipla* acontece através do atributo **'selecionados'** aninhado com o atributo **'valor'**.
 - O acesso da *Lista Simples* acontece através do atributo **'selecionado'** aninhado com o atributo **'valor'**.
 
-### Segue as diferenças entre as chamadas dos parâmetros:
+### 💻 Segue as diferenças entre as chamadas dos parâmetros:
 ```
 // Lista Simples de matrícula (selecionado)
 matricula = parametros.matricula.selecionado.valor
@@ -103,7 +103,7 @@ matriculas = parametros.matriculas.selecionados.valor
 nome = parametros.nome.valor
 ``` 
 
-### Chamada de parâmetros e tipagens das classes:
+### 💻 Chamada de parâmetros e tipagens das classes:
 ```
 // ====== Declarando os parâmetros de entrada ======
 selecaoAvancada = parametros.selecaoAvancada?.selecionados?.valor // TIPO -> Lista Múltipla

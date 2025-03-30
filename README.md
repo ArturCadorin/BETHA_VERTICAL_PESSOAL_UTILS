@@ -1,6 +1,6 @@
 # 🌐 REPOSITÓRIO DE UTILITÁRIOS DA VERTICAL PESSOAL - BETHA SISTEMAS 🏢
 ---
-### ⚠️ Este repositório foi criado com o intuíto de centralizar os utilitarios da _*Vertical Pessoal*_, incluindo os seguintes itens:
+### ⚠️ *Este repositório foi criado com o intuíto de centralizar os utilitarios da Vertical Pessoal, incluindo os seguintes itens:*
 - Modelos de Relatórios.
 - Modelos de Scripts.
 - Modelos de Eventos do Folha.

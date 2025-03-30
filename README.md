@@ -1,5 +1,5 @@
 # 🌐 REPOSITÓRIO DE UTILITÁRIOS DA VERTICAL PESSOAL - BETHA SISTEMAS 🏢
-- Guia de como baixar o repositório logo ao final do README!
+- 💡 Guia de como baixar o repositório logo ao final do README!
 ---
 ### ⚠️ *Este repositório foi criado com o intuíto de centralizar os utilitarios da Vertical Pessoal, incluindo os seguintes itens:*
 - Utilitários para os Relatórios.

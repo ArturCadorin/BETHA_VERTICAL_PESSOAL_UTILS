@@ -7,13 +7,13 @@ Existem parâmetros de diversos tipos com N possibilidades de manipulação, ver
 # 📝 Guia para criação de um parâmetro
 ---
 Acessando o menu de parâmetros:
-![Menu parâmetros](.screenshots/Screenshot_4.png)
+![Menu parâmetros](screenshots/Screenshot_4.png)
 Criando um parâmetro:
-![Criando parâmetro](.screenshots/Screenshot_1.png)
+![Criando parâmetro](screenshots/Screenshot_1.png)
 
 # 📝 Guia para configuração do parâmetro
 ---
-![Configurando parâmetro](.screenshots/Screenshot_7.png)
+![Configurando parâmetro](screenshots/Screenshot_7.png)
 
 Campos de cadastro do parâmetro:
 - Nome: nome do parâmetro, utilizado para chamar o parâmetro no código fonte.
@@ -72,7 +72,7 @@ Primeiramente veremos os tipos de parâmetros disponíveis:
 - Este parâmetro irá retornar uma variável do tipo 'Double'.
 
 Exemplo de preenchimento para todos os tipos de parâmetros disponíveis:
-![Preenchimento parâmetros](.screenshots/Screenshot_5.png)
+![Preenchimento parâmetros](screenshots/Screenshot_5.png)
 
 # ⚙️ Consultando e manipulando os parâmetros no código fonte
 ---
@@ -141,6 +141,6 @@ imprimir "Conteudo: " + salario + ", Classe: " +  salario.getClass()
 # 📚 Exemplos de parâmetros comumente utilizados na Vertical Pessoal
 ---
 Exemplo de um parâmetro para consulta de matrículas:
-![Consulta matrícula](.screenshots/Screenshot_2.png)
+![Consulta matrícula](screenshots/Screenshot_2.png)
 Exemplo de um parâmetro para consulta de seleção avançada:
-![Consulta matrícula](.screenshots/Screenshot_3.png)
+![Consulta matrícula](screenshots/Screenshot_3.png)

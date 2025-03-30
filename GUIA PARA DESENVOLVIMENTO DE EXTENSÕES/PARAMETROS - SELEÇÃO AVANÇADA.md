@@ -2,7 +2,8 @@
 ---
 ## Finalidade
 Consultar a seleção avançada que foi selecionada no parâmetro.
-## Guia para criação do parâmetro
+# 📝 Guia para criação do parâmetro
+---
 ### 🧑‍💻 Criando um parâmetro:
 ![Criando parâmetro](screenshots/Screenshot_1.png)
 ### 🧑‍💻 Configurando parâmetro para seleção avançada:

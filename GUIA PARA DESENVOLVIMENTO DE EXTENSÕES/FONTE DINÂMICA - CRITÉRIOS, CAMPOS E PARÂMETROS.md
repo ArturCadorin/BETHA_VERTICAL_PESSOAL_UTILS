@@ -5,6 +5,7 @@ Aqui iremos abordar o básico referente consultas em fontes dinâmicas.
 # 🖥️ Características da Fonte Dinâmica
 ---
 A fonte dinâmica nada mais é do que uma consulta ao banco de dados da entidade selecionada, existem alguns filtros e propriedades que podemos usar:
+
 **🔍 - Critério:** é o filtro de consulta e pode ser utilizado de N maneiras, podemos representa-lo pelo comando WHERE do SQL.
     - Exemplo de uso:
 ```

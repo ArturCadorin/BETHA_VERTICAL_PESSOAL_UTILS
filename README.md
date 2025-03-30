@@ -8,12 +8,12 @@
 
 # 🗂️ ESTRUTURA DO REPOSITÓRIO:
 ---
-### EVENTOS - FOLHA:
+### 📂 EVENTOS - FOLHA:
 - Configuração dos eventos.
 - Incidências dos eventos.
 - Fórmula dos eventos.
 
-### GUIA PARA DESENVOLVIMENTO DE EXTENSÕES:
+### 📂 GUIA PARA DESENVOLVIMENTO DE EXTENSÕES:
 - Guia básico referente a estrutura de relatórios.
 - Guia básico referente ao funcionamento dos parâmetros.
 - Guia básico referente a consulta em fontes dinâmicas (critério, campos e parâmetros).
@@ -21,11 +21,11 @@
 - Exemplos de fontes dinâmicas.
 - Funções e métodos uteis.
 
-### RELATÓRIOS - FOLHA:
+### 📂 RELATÓRIOS - FOLHA:
 - Modelos de fonte dinâmicas.
 - Modelos de arquivos Jasper.
 
-### SCRIPTS - FOLHA:
+### 📂 SCRIPTS - FOLHA:
 - Modelos de scripts.
 - Scripts de **Consulta**.
 - Scripts de **Alterações**.

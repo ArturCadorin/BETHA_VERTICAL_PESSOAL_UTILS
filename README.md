@@ -2,8 +2,8 @@
 ---
 ### ⚠️ *Este repositório foi criado com o intuíto de centralizar os utilitarios da Vertical Pessoal*
 - 💡 Guia de como baixar o repositório logo ao final do README!
-- 🔄 Repositório ainda está sendo atualizado! 🔄
-### *Itens:*
+- ⌛ Repositório ainda está sendo atualizado! 🔄
+### 📑 *Itens:*
 - Utilitários para os Relatórios.
 - Utilitários para os Scripts.
 - Utilitários para os Eventos do Folha.

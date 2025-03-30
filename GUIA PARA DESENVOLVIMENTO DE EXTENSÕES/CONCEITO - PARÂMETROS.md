@@ -1,7 +1,6 @@
-﻿# 📌 Conceitos Básicos sobre Parâmetros
----
 ## ⚠️ Recomenda-se pelo menos o conhecimento básico sobre lógica de programação para o bom entendimento deste conteúdo.
-
+# 📌 Conceitos Básicos sobre Parâmetros
+---
 Os parâmetros são os campos que o usuário preenche durante a execução do script/relatório, normalmente seu uso é destinado a consultas em fonte dinâmica, mas podem variar conforme a necessidade do script/relatório. São funcionalidades poderosas com capacidade de aprimorar a experiência do usuário e trazer mais dinâmismo para a execução do script/relatório.
 Existem parâmetros de diversos tipos com N possibilidades de manipulação, veremos alguns a seguir.
 

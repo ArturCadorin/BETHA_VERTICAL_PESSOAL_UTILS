@@ -8,6 +8,7 @@ Existem parâmetros de diversos tipos com N possibilidades de manipulação, ver
 ---
 Acessando o menu de parâmetros:
 ![Menu parâmetros](screenshots/Screenshot_4.png)
+
 Criando um parâmetro:
 ![Criando parâmetro](screenshots/Screenshot_1.png)
 
@@ -142,5 +143,6 @@ imprimir "Conteudo: " + salario + ", Classe: " +  salario.getClass()
 ---
 Exemplo de um parâmetro para consulta de matrículas:
 ![Consulta matrícula](screenshots/Screenshot_2.png)
+
 Exemplo de um parâmetro para consulta de seleção avançada:
 ![Consulta matrícula](screenshots/Screenshot_3.png)

@@ -29,3 +29,4 @@
 - Modelos de scripts.
 - Scripts de **Consulta**.
 - Scripts de **Alterações**.
+- Scripts de **Importações**.

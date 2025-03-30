@@ -10,7 +10,7 @@ Consultar e manipular um arquivo fornecido como entrada de dados. Muito utilizad
 
 # ⚙️ Utilizando e manipulando o parâmetro de arquivo
 ---
-### Consumindo e manipulando um arquivo fornecido através do parâmetro.
+### 🧑‍💻 Consumindo e manipulando um arquivo fornecido através do parâmetro.
 ```
 // Declarando o parâmetro de entrada do tipo .CSV
 def arquivo = Arquivo.ler(parametros.arquivo.valor, 'csv', [encoding: 'iso-8859-1'] )

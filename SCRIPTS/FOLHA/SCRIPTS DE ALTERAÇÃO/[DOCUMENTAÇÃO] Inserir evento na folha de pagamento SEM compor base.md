@@ -5,4 +5,4 @@ Este script insere um evento em uma folha de pagamento já calculada/fechada.
 
 ﻿# 📑 Guia preenchimento dos parâmetros
 ---
-![Parâmetros](../../screenshots/screenshot-1.png)
+![Parâmetros](SCRIPTS/screenshots/Screenshot_1.png)

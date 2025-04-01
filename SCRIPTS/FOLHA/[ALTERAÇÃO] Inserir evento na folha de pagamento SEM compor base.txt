@@ -1,0 +1,197 @@
+/////////////////////////////////// Parâmetros ///////////////////////////////////
+
+p_selecao = parametros.selecaoAvancada?.selecionados?.valor // LISTA MULTIPLA (fonte seleção avançada v2)
+p_token = parametros.token?.valor // CARACTER
+p_competencia = parametros.competencia?.valor // MÊS/ANO 
+p_matricula = parametros.matricula?.selecionados?.valor // LISTA MULTIPLA (fonte matrículas v2)
+p_evento = parametros.evento?.selecionado?.valor // LISTA SIMPLES (fonte configuração evento v2)
+p_opcao = parametros.opcaoExecucao?.selecionado?.valor // LISTA SIMPLES (REVISAR, ALTERAR)
+p_valorCalculado = parametros.valorCalculado?.valor // VALOR 
+p_valorReferencia = parametros.valorReferencia?.valor // VALOR
+p_processamento = parametros.processamento?.selecionado?.valor // LISTA SIMPLES (MENSAL, FERIAS, 13º SALARIO, RESCISAO)
+p_subtipoProcessamento = parametros.subTipoProcessamento?.selecionado?.valor // LISTA SIMPLES (INTEGRAL, COMPLEMENTAR, ADIANTAMENTO)
+
+/////////////////////////////////// Métodos e Funções ///////////////////////////////////////////
+
+//Método POST
+def Object doPost(Object dados) {
+    requisicao = Http.servico("https://pessoal.betha.cloud/service-layer/v1/folha")
+            .cabecalho("Authorization", "Bearer ${p_token}");
+	
+    resposta = requisicao.POST(JSON.escrever(dados), Http.JSON);
+  	//Object respostaObj = JSON.ler(resposta);
+  	imprimir resposta
+    return resposta;
+}
+
+// Confere o lote enviado
+def confereLote(idLote){
+  loteExecutado = false
+  impressaoLote = ""
+  while(!loteExecutado){
+    lote = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/folha/lotes/${idLote}")
+    	.cabecalho("Authorization", "Bearer ${p_token}").GET()
+    lote = lote.json()
+    
+    if(lote.situacao == "EXECUTADO"){
+      loteExecutado = true
+      impressaoLote = lote
+      
+      break
+    }
+    esperar 2.segundos // Alterar caso seja necessário
+  }
+  return impressaoLote
+}
+
+// Gera o arquivo para revisão dos dados
+def gerarArquivoRevisao(arquivoRevisao, body, matricula, dadosParaImpressao){
+  arquivoRevisao.escrever("Matrícula: $matricula")
+  arquivoRevisao.novaLinha()
+  arquivoRevisao.escrever("Totalizadores da folha ANTES -> ${dadosParaImpressao.totalizadoresFolha}")
+  arquivoRevisao.novaLinha()
+  arquivoRevisao.escrever("Evento: ${dadosParaImpressao.descricaoEvento}")
+  arquivoRevisao.novaLinha()
+  arquivoRevisao.escrever("Totalizadores da folha DEPOIS -> TOTAL BRUTO: $body.conteudo.totalBruto | TOTAL DESCONTOS: $body.conteudo.totalDesconto | TOTAL LIQUIDO: $body.conteudo.totalLiquido")
+  arquivoRevisao.novaLinha()
+  arquivoRevisao.escrever("-----------------------------------------")
+  arquivoRevisao.novaLinha()
+}
+
+// Gera o arquivo de backup                            
+def gerarArquivoBackup(arquivoBackup, matricula, processamento, subtipoProcessamento, competencia, response)   {
+  arquivoBackup.escrever("Matrícula: $matricula | Folha: $p_processamento ; $p_subtipoProcessamento ; $p_competencia")
+  arquivoBackup.novaLinha()
+  arquivoBackup.escrever(response)
+  arquivoBackup.novaLinha()
+  arquivoBackup.escrever("-----------------------------------------")
+  arquivoBackup.novaLinha()
+}
+
+/////////////////////////////////// Variáveis ///////////////////////////////////
+
+arquivoLote = Arquivo.novo("Lote das folhas alteradas via SL.txt", 'txt', [encoding: 'iso-8859-1']);
+arquivoBackup = Arquivo.novo("Backup api_folha.txt", 'txt', [encoding: 'iso-8859-1']);
+arquivoRevisao = Arquivo.novo("Revisão dos JSON.txt", 'txt', [encoding: 'iso-8859-1']);
+
+listaFolhas = []
+
+// Mapa para facilitar a impressão de dados gerais
+dadosParaImpressao = [
+  descricaoEvento: "",
+  totalizadoresFolha: [total: ""]
+]
+
+// Mapa para popular o JSON com o evento destinado
+eventoJSON = [
+  id: 0,						
+  configuracao: [id: null], 	
+  tipo: null, 					
+  referencia: null, 			
+  valor: null, 					
+  classificacaoEvento: null,	
+  lancamentoVariavel: false, 	
+  replicado: false, 				
+  pagamentosFerias: [], 		
+  rateioDependentes: [], 		
+  version: null 				
+] 
+
+/////////////////////////////////// Montando os critérios da fonte dinâmica ///////////////////////////////////
+
+filtroFolha = "competencia = '${p_competencia}' and tipoProcessamento = '${p_processamento}' and subTipoProcessamento = '${p_subtipoProcessamento}'"
+if (p_matricula) {
+  filtroFolha += " and matricula.id = (${p_matricula.join(',')})"
+}
+
+filtroSelecaoAvancada = ""
+if (p_selecao) {
+  filtroSelecaoAvancada = "id in (${p_selecao.join(',')})"
+}
+imprimir filtroFolha + " | " + filtroSelecaoAvancada
+/////////////////////////////////// Manipulando e Processando os dados ///////////////////////////////////////////
+
+// Escrevendo o cabeçalho do arquivo de revisão de dados
+arquivoRevisao.escrever("===== REVISÃO DOS DADOS QUE SERÃO ALTERADOS =====")
+arquivoRevisao.novaLinha()
+arquivoRevisao.escrever("Competência de cálculo das folhas: $p_competencia | Processamento: $p_processamento | SubTipo Processamento: $p_subtipoProcessamento")
+arquivoRevisao.novaLinha()
+arquivoRevisao.escrever("-----------------------------------------")
+arquivoRevisao.novaLinha()
+
+// Escrevendo o cabeçalho do arquivo de backup
+arquivoBackup.escrever("===== BACKUP DAS FOLHAS DE PAGAMENTO (/v1/api/folha) | COMPETÊNCIA: $p_competencia =====")
+arquivoBackup.novaLinha()
+arquivoBackup.escrever("-----------------------------------------")
+arquivoBackup.novaLinha()
+
+// Populando o JSON do evento que será inserido
+Dados.folha.v2.configuracaoEvento.busca(criterio: "id = $p_evento", campos: "id, codigo, descricao, tipo, classificacao").each{ evento -> 
+  eventoJSON.configuracao.id = evento.id
+  eventoJSON.tipo = evento.tipo
+  eventoJSON.referencia = p_valorReferencia
+  eventoJSON.valor = p_valorCalculado
+  eventoJSON.classificacaoEvento = evento.classificacao
+  eventoJSON.replicado = parametros.ehReplica?.selecionado?.valor ?: eventoJSON.replicado 
+  dadosParaImpressao.descricaoEvento = "$evento.codigo - $evento.descricao | tipo: $evento.tipo | valor: $eventoJSON.valor"
+}
+
+// Percorrendo as folhas de pagamentos e preparando JSON para POST
+Dados.folha.v2.remuneracoes.buscaComEventos(criterio: filtroFolha, parametros: [selecaoAvancada: filtroSelecaoAvancada]).each{ folha -> 
+  // GET-> v1/api/folha
+  response = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/folha/$folha.id").cabecalho("Authorization", "Bearer ${p_token}").GET();
+  response = response.json();
+  
+  // Manipulação de strings
+  matricula = folha.matricula.codigoMatricula.contrato ? "$folha.matricula.codigoMatricula.numero/$folha.matricula.codigoMatricula.contrato" : "$folha.matricula.codigoMatricula.numero"
+  matricula += " - $folha.matricula.pessoa.nome"
+  dadosParaImpressao.totalizadoresFolha = "TOTAL BRUTO: $folha.totalBruto | TOTAL DESCONTOS: $folha.totalDesconto | TOTAL LIQUIDO: $folha.valorLiquido"
+  
+  // Gerando o arquivo de backup
+  gerarArquivoBackup(arquivoBackup, matricula, p_processamento, p_subtipoProcessamento, p_competencia, response)
+  
+  imprimir eventoJSON
+  
+  // Manipulando JSON da folha de pagamento
+  response.eventos << eventoJSON 
+  if(eventoJSON.tipo == "DESCONTO"){ 
+	response.totalDesconto += eventoJSON.valor
+  	response.totalLiquido -= eventoJSON.valor
+  }
+  if(eventoJSON.tipo == "VENCIMENTO"){ 
+  	response.totalBruto += eventoJSON.valor
+  	response.totalLiquido += eventoJSON.valor
+  }
+  
+  body = [
+    "idIntegracao": response['id'],
+    "conteudo": response
+  ]
+  listaFolhas << body
+
+  // Montando o arquivo de revisão dos JSON
+  gerarArquivoRevisao(arquivoRevisao, body, matricula, dadosParaImpressao)
+}
+
+/////////////////////////////////// Validações e Alteração dos dados ///////////////////////////////////////////
+
+// Revisão e Alteração
+if(p_opcao && p_opcao == "REVISAR"){
+  Resultado.arquivo(arquivoRevisao)
+  Resultado.arquivo(arquivoBackup)
+}else if(p_opcao && p_opcao == "ALTERAR"){
+  // Realizando o POST
+  listaFolhas.collate(50).each { folhaCollate -> 
+   body = JSON.escrever(folhaCollate)
+    
+   envia = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/folha/")
+  		.cabecalho("Authorization", "Bearer ${p_token}").POST(body, Http.JSON)
+   envia = envia.json()
+   arquivoLote.escrever(confereLote(envia.id))
+   arquivoLote.novaLinha()
+  }
+  // arquivoLote.escrever(confereLote(envia.id))
+  Resultado.arquivo(arquivoRevisao)
+  Resultado.arquivo(arquivoBackup)
+  Resultado.arquivo(arquivoLote)
+}

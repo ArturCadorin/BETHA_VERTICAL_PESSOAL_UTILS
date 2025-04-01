@@ -6,6 +6,13 @@ Este script insere um evento em uma folha de pagamento já calculada/fechada.
 ﻿# 💡 Sugestão para execução do script
 ---
 ![Parâmetros](../../../SCRIPTS/screenshots/Screenshot_2.png)
+### 1º Revisar e Validar o JSON (não realiza alteração)
+- Ao escolher está opção o script NÃO irá realizar a alteração, apenas emitir os arquivos para revisão dos dados a serem ajustado.
+- Arquivos que serão gerados:
+  - Arquivo de Revisão: Retorna um arquivo TXT com os dados de cada folha para serem revisados antes da alteração
+  - 
+  - Arquivo de Backup:
+  - 
 
 ﻿# 📑 Guia preenchimento dos parâmetros
 ---

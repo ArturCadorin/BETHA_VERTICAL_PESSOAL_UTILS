@@ -9,19 +9,19 @@ Este script insere um evento em uma folha de pagamento já calculada/fechada.
 ### 1º Revisar e Validar o JSON (não realiza alteração)
 - Ao escolher está opção o script NÃO irá realizar a alteração, apenas emitir os arquivos para revisão dos dados a serem ajustado.
 - Arquivos que serão gerados:
-  - ![Arquivo revisão](../../../SCRIPTS/screenshots/Screenshot_3.png)
-  - Arquivo de Revisão: Retorna um arquivo TXT com os dados de cada folha para serem revisados antes da alteração.
-  - Legenda do arquivo: Informações da matrícula, Evento a ser inserido e Totalizadores da folha ANTES e DEPOIS da alteração.
-  - ![Arquivo revisão](../../../SCRIPTS/screenshots/Screenshot_4.png)
-  - Arquivo de Backup: Retorna um arquivo TXT com o backup das folhas (via GET antes da alteração).
-  - Legenda do arquivo: Informações da folha e JSON da folha antes da alteração. 
-  - ![Arquivo backup](../../../SCRIPTS/screenshots/Screenshot_5.png)
+- ![Arquivo revisão](../../../SCRIPTS/screenshots/Screenshot_3.png)
+- Arquivo de Revisão: Retorna um arquivo TXT com os dados de cada folha para serem revisados antes da alteração.
+- Legenda do arquivo: Informações da matrícula, Evento a ser inserido e Totalizadores da folha ANTES e DEPOIS da alteração.
+- ![Arquivo revisão](../../../SCRIPTS/screenshots/Screenshot_4.png)
+- Arquivo de Backup: Retorna um arquivo TXT com o backup das folhas (via GET antes da alteração).
+- Legenda do arquivo: Informações da folha e JSON da folha antes da alteração. 
+- ![Arquivo backup](../../../SCRIPTS/screenshots/Screenshot_5.png)
   
 ### 2º Validar e Executar o POST
 - Ao escolher está opção o script irá realizar a alteração e emitir os arquivos gerados pelo script.
 - Realizar uma alteração POST diretamente na folha da matrícula informada.
 - Retorna os arquivos mencionados antes, ALÉM de retornar também um arquivo com a impressão do lote:
-  - ![Arquivo lote](../../../SCRIPTS/screenshots/Screenshot_6.png)
+- ![Arquivo lote](../../../SCRIPTS/screenshots/Screenshot_6.png)
 
 ﻿# 📑 Guia preenchimento dos parâmetros
 ---

@@ -17,6 +17,12 @@ Este script insere um evento em uma folha de pagamento já calculada/fechada.
   - Legenda do arquivo: Informações da folha e JSON da folha antes da alteração. 
   - ![Arquivo backup](../../../SCRIPTS/screenshots/Screenshot_5.png)
   
+### 2º Validar e Executar o POST
+- Ao escolher está opção o script irá realizar a alteração e emitir os arquivos gerados pelo script.
+- Realizar uma alteração POST diretamente na folha da matrícula informada.
+- Retorna os arquivos mencionados antes, ALÉM de retornar também um arquivo com a impressão do lote:
+  - ![Arquivo lote](../../../SCRIPTS/screenshots/Screenshot_6.png)
+
 ﻿# 📑 Guia preenchimento dos parâmetros
 ---
 ![Parâmetros](../../../SCRIPTS/screenshots/Screenshot_1.png)

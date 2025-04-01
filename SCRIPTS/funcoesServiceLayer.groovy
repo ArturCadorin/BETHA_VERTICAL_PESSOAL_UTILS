@@ -9,32 +9,32 @@ p_Token = parametros.pToken.valor // CARACTER
 
 // ==== Requisições GET
 //def item = item que está percorrendo a fonte dinâmica
-requisicaoGET = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/$item.id")
+requisicao = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/$item.id")
             .chaveIntegracao(Variavel.CHAVE_INTEGRACAO).GET()
 
-requisicaoGET = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/$item.id")
+requisicao = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/$item.id")
             .cabecalho("Authorization", "Bearer ${p_Token}").GET()
 resposta = requisicaoGET.json(); // Converte a requisição GET em um JSON manipulável através do script
 
 // ==== Requisições POST
-requisicaoPOST = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
+envia = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
             .chaveIntegracao(Variavel.CHAVE_INTEGRACAO).POST(body, Http.JSON)
 
-requisicaoPOST = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
+envia = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
             .cabecalho("Authorization", "Bearer ${p_token}").POST(body, Http.JSON)
 
 // ==== Requisições DELETE
-requisicaoDELETE = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
+deleta = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
             .chaveIntegracao(Variavel.CHAVE_INTEGRACAO).DELETE(body, Http.JSON)
 
-requisicaoDELETE = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
+deleta = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
             .cabecalho("Authorization", "Bearer ${p_token}").DELETE(body, Http.JSON)
 
 // ==== Requisições PUT
-requisicaoPUT = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
+atualiza = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
             .chaveIntegracao(Variavel.CHAVE_INTEGRACAO).PUT(body, Http.JSON)
 
-requisicaoPUT = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
+atualiza = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-matricula/")
             .cabecalho("Authorization", "Bearer ${p_token}").PUT(body, Http.JSON)
 
 //////////////////////////////// Tratando o JSON oriundo do método GET ////////////////////////////////
@@ -98,8 +98,8 @@ def confereLote(idLote){
   return
 }
 // Formatando requisição realizada e chamando a função confereLote
-requisicaoPOST = requisicaoPOST.json()
-confereLote(requisicaoPOST.id)
+envia = envia.json()
+confereLote(envia.id)
 
 // 2º exemplo - Retorna a impressão do lotes em um arquivo TXT
 def confereLote(idLote){
@@ -123,3 +123,22 @@ def confereLote(idLote){
 // Escrevendo o arquivo TXT com o retorno do lotes
 arquivoLote.escrever(confereLote(envia.id))
 arquivoLote.novaLinha()
+
+//////////////////////////////// Alterando os dados com requisições http ////////////////////////////////
+// 1º exemplo -> Realiza as requisições de uma em uma.
+body = JSON.escrever([body])
+envia = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/folha/")
+  	.cabecalho("Authorization", "Bearer ${p_token}").POST(body, Http.JSON)
+envia = envia.json()
+confereLote(envia.id)
+
+// 2º exemplo -> Realiza as requisições de 50 em 50 (recomendado para alterações em massa)
+listaFolhas.collate(50).each { folhaCollate -> 
+   body = JSON.escrever(folhaCollate)
+    
+   envia = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/folha/")
+  		.cabecalho("Authorization", "Bearer ${p_token}").POST(body, Http.JSON)
+   envia = envia.json()
+   arquivoLote.escrever(confereLote(envia.id))
+   arquivoLote.novaLinha()
+}

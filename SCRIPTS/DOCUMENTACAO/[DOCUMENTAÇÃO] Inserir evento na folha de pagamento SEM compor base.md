@@ -16,7 +16,7 @@ Este script insere um evento em uma folha de pagamento já calculada/fechada.
 - ![Arquivo revisão](../../../SCRIPTS/screenshots/Screenshot_4.png)
 - Arquivo de Backup: Retorna um arquivo TXT com o backup das folhas (via GET antes da alteração).
 - Legenda do arquivo: Informações da folha e JSON da folha antes da alteração. 
-- ![Arquivo backup](../SCRIPTS/screenshots/Screenshot_5.png)
+- ![Arquivo backup](../../SCRIPTS/screenshots/Screenshot_5.png)
   
 ### 2º Validar e Executar o POST
 - Ao escolher está opção o script irá realizar a alteração e emitir os arquivos gerados pelo script.

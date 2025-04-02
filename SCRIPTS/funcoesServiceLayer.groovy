@@ -141,4 +141,6 @@ listaFolhas.collate(50).each { folhaCollate ->
    envia = envia.json()
    arquivoLote.escrever(confereLote(envia.id))
    arquivoLote.novaLinha()
+            // ou
+   imprimir confereLote(envia.id)
 }

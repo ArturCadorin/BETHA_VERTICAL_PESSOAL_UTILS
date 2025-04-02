@@ -10,6 +10,9 @@ if (p_selecao) {
 }
 
 ///////////////////// Revisar e alterar (lista simples) /////////////////////
+// Para scripts que realizam alteração service-layer, dessa forma irá ter duas opções: Revisar e Alterar
+// Revisar: Aonde pode ser manipulado uma logica para revisar os dados antes de alterar.
+// Alterar: Realiza o SL além de emitir um arquivo de backup se for necessário
 p_opcao = parametros.opcaoExecucao?.selecionado?.valor // Lista simples (REVISAR, ALTERAR)
 if(p_opcao && p_opcao == "REVISAR"){
   /*

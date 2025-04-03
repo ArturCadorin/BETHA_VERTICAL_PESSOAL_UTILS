@@ -7,7 +7,7 @@
 
 imprimir processamentos // {procesMensal=[INTEGRAL], procesFerias=[INTEGRAL], proces13Salario=[INTEGRAL], procesRescisao=[]}
 
-processamentoCalculo // MENSAL - INTEGRAL, FERIAS - INTEGRAL, 13º SAL - INTEGRAL
+processamento = processamentoCalculo(processamentos) // MENSAL - INTEGRAL, FERIAS - INTEGRAL, 13º SAL - INTEGRAL
 
 // Formatar processamentos
 def processamentoCalculo(processamentos) {

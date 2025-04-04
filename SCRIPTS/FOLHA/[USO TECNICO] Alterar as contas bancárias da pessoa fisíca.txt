@@ -1,0 +1,390 @@
+/**
+*	
+*			***** Orientações e Notas técnicas do script *****
+*
+*	Realiza o cadastro de uma nova conta bancária.
+*	Vincula a nova conta bancária como príncipal a partir do novo histórico.
+*	Retorna um arquivo CSV com as pessoas que tiveram seus cadastros realizados.
+*	Retorna um arquivo TXT para backup, com o JSON do histórico anterior a alteração realizada.
+*	Retorna um arquivo TXT para backup, com o JSON dos históricos que foram criados através deste script.
+*
+*			***** Sugestão de padrão do arquivo CSV fornecido por parâmetro *****
+*
+*	CPF; Matricula; Contrato; Agência; Digito; Conta; Digito; Tipo; Conta; 
+*	** Para arquivos que não seguem este padrão, ajustar a leitura do arquivo.
+*
+*			***** Validações realizadas na conta bancária *****
+*
+*	Validar se a conta informada no arquivo de entrada já está cadastrada.
+* 		 Caso SIM: verificar se esta conta é a principal, caso não for, ativa-se como conta principal.
+*    	 Caso NÃO: tratar as variáveis para realizar o cadastro da nova conta bancária.
+*
+**/
+
+// ------------------------- Variáveis e Constantes -------------------------
+urlBase = "https://pessoal.betha.cloud/service-layer/v1/api"
+urlCaminho = "historico-pessoa"
+token = Variavel.CHAVE_INTEGRACAO_FOLHA // Token da PM NAVEGANTES	
+MAX = 50 // Quantidade de registros que serão enviados em um lote
+
+// ------------------------- Funções para auxiliar na execução do SL -------------------------
+
+// ** Função que realiza o GET no historico-pessoa
+def getHistoricoPessoa(idHistorico, token){
+  servicoGet = Http.servico("https://pessoal.betha.cloud/service-layer/v1/api/historico-pessoa/${idHistorico}");
+  servicoGet.chaveIntegracao(token);  
+  resultadoGet = servicoGet.GET();
+  return resultadoGet
+}
+
+// ** Função para montar o Arquivo de BACKUP das contas ATUALIZADAS
+def montarArquivoBackupAtualizacao(idHistorico, arquivoBackupAtualizacao, token){
+  resultadoGet = getHistoricoPessoa(idHistorico, token);
+  if (resultadoGet.codigo() == 200){
+    arquivoBackupAtualizacao.escrever(JSON.escrever(resultadoGet.json()))
+    arquivoBackupAtualizacao.novaLinha()   
+  }
+}
+
+// ** Função para montar o Arquivo de BACKUP das contas CADASTRADAS
+def montarArquivoBackupCriacao(idHistorico, arquivoBackupCriacao, token){
+  resultadoGet = getHistoricoPessoa(idHistorico, token);
+  if (resultadoGet.codigo() == 200){
+    arquivoBackupCriacao.escrever(JSON.escrever(resultadoGet.json()))
+    arquivoBackupCriacao.novaLinha()  
+  }
+}
+
+// ** Função para formatar o tipo da conta a ser cadastrado
+def tratarTipoConta(tipoConta){
+  tipo = ""
+  switch(tipoConta){
+    case "Corrente":
+    tipo = "CORRENTE"
+    break;
+    case "Poupança":
+    tipo = "POUPANCA"
+    break;
+    case "Salário":
+    tipo = "SALARIO"
+    break;
+    case "Eletrônica":
+    tipo = "ELETRONICA"
+    break;
+    case "NSGD":
+    tipo = "NSGD"
+    break;
+    default:
+      break;
+  }
+  return tipo
+}
+
+// ** Função para realizar a requisição PUT 
+def enviar (servico, conteudo, token) {  
+  urlServico = urlBase + "/" + servico;
+  servico = Http.servico(urlServico).chaveIntegracao(token)
+  //.cabecalho('Content-Type','application/json')
+  
+  dados =  JSON.escrever(conteudo)
+  resposta = servico.PUT(dados, Http.JSON)
+  sucesso = false;
+  conteudo = '';
+  idLote = ''; 
+  
+  if (resposta.ehJson()) {
+    json = resposta.json();
+    idLote = json.id;
+    sucesso = resposta.sucesso();
+    conteudo = resposta.conteudo();
+    
+  }
+  servico.close();
+  return [
+    sucesso : sucesso,
+    idLote  : idLote,
+    conteudo: conteudo
+  ]; 
+}
+
+// ------------------------- Métodos para execução do SL -------------------------
+nrLinha = 0
+qtdLotes = 0
+idLotes = []
+
+// Método para montar o conteúdo da requisição PUT
+def Object montarConteudoAtualizacao(dadosHistoricoPessoa, arquivoBackupAtualizacao, token){
+  
+  idHistorico = dadosHistoricoPessoa.id
+  idConta = dadosHistoricoPessoa.idConta
+  idContaAntiga = dadosHistoricoPessoa.idContaAntiga
+  arquivo = arquivoBackupAtualizacao
+  
+  montarArquivoBackupAtualizacao(idHistorico, arquivo, token)
+  historicoPessoa = getHistoricoPessoa(idHistorico, token)
+  
+  objeto = historicoPessoa.json()
+  objeto.contasBancarias.find { it.id == idConta }.principal = true // Alterando o status da conta bancária para principal
+  def contaAntiga = objeto.contasBancarias.find { it.id == idContaAntiga } 
+  // Trativa caso a Pessoa Fisica NÃO POSSUA NENHUMA conta bancária settada como principal
+  if(contaAntiga){
+    contaAntiga.principal = false // Retirando o status de principal da antiga conta bancária  
+  }else{
+    println("Nenhuma conta bancária principal encontrada para alterar o status.")  
+  }
+  objeto.remove("camposAdicionais") // Remove o array 'camposAdcionais' do JSON
+  
+  // Montando o JSON para realizar a requisição PUT
+  body = [:]
+  body = [
+    "idGerado": idHistorico, 
+    "conteudo": objeto
+  ]
+  return body;
+}
+
+// Método para montar o conteúdo da requisição POST
+def Object montarConteudoCriacao(dadosHistoricoPessoa, arquivoBackupCriacao, token){
+  
+  idHistorico = dadosHistoricoPessoa.id
+  idAgencia = dadosHistoricoPessoa.idAgencia
+  numeroConta = dadosHistoricoPessoa.numeroConta
+  digitoConta = dadosHistoricoPessoa.digitoConta
+  tipoConta = tratarTipoConta(dadosHistoricoPessoa.tipoConta)
+  arquivo = arquivoBackupCriacao
+  
+  montarArquivoBackupCriacao(idHistorico, arquivo, token);  
+  historicoPessoa = getHistoricoPessoa(idHistorico, token)
+  
+  // Tratativa para cadastro da nova conta bancária
+  novaContaBancaria = [
+    "id": 0,
+    "agencia": [
+      "id": idAgencia
+    ],
+    "numero": numeroConta,
+    "digito": digitoConta,
+    "tipo": tipoConta,
+    "dataAbertura": "2025-01-24", // AVERIGUAR COM A NATHALIA PARA INSERIR DATA DE ABERTURA DA CONTA <------------------------------------------------------------
+    "dataFechamento": null,
+    "situacao": "ABERTA", // Situação aberta
+    "principal": true
+  ]
+  
+  // Tratando o historico-pessoa para execução do PUT
+  objeto = historicoPessoa.json()
+  objeto.contasBancarias << novaContaBancaria // Cadastrando a nova conta bancária
+  def contaAntiga = objeto.contasBancarias.find { it.id == dadosHistoricoPessoa.idContaAntiga } 
+  // Trativa caso a Pessoa Fisica NÃO POSSUA NENHUMA conta bancária settada como principal
+  if(contaAntiga){
+    contaAntiga.principal = false // Retirando o status de principal da antiga conta bancária  
+  }else{
+    println("Nenhuma conta bancária principal encontrada para alterar o status.")  
+  }
+  objeto.remove("camposAdicionais")
+  
+  // Montando o JSON para realizar a requisição POST
+  body = [:]
+  body = [
+    "idGerado": idHistorico, 
+    "conteudo": objeto
+  ]
+  return body;
+}
+
+// Método para realizar a requisição em lotes, onde a quantidade de lotes é controlada pela constante 'MAX'
+def enviaLotes (postLista, qtdLote, caminhoURL) {
+  def listaJson = []
+  def total = postLista.size()	
+  println("Total de Registros a serem Enviados: ${total}")
+  
+  postLista.each { i ->
+    nrLinha += 1
+    listaJson << i
+    
+    // Quando a quantidade máxima de registros permitida em um lote for atingida, realiza a requisição PUT através da closure 'enviar'.
+    if ((listaJson.size() > 0 && listaJson.size() % qtdLote == 0) || nrLinha == total) {
+      println '--> Enviando Lote: ' + qtdLotes +' com ' + listaJson.size() +' Registro(s)'
+      println '--> Conteudo Lote: '+ JSON.escrever(listaJson)
+      resposta = enviar(caminhoURL, listaJson, token)
+      if (!resposta.sucesso) {
+        println '--> Tentando reenviar os dados em 10 segundos'
+        esperar 10000
+        resposta = enviar(caminhoURL, listaJson, token)
+      }
+      if (!resposta.sucesso) {
+        suspender '--> Resposta: ' + resposta.conteudo
+      } else {
+        
+        idLotes << resposta.idLote
+        println "--> Lote ${resposta.idLote} enviado"
+        println '--> Zerando Lote ...'
+        listaJson = []
+        qtdLotes++
+          }
+    }
+  }
+}
+
+// Método para escrever os arquivos de retorno
+def escreverArquivo(dados, arquivoRetorno){
+  arquivoRetorno.escrever(dados.id) 
+  arquivoRetorno.escrever(dados.nome)
+  arquivoRetorno.escrever(dados.cpf)
+  arquivoRetorno.escrever(dados.numeroContaAntiga?:'')
+  arquivoRetorno.escrever("${dados.numeroConta}-${dados.digitoConta?:''}")
+  arquivoRetorno.escrever(dados.mensagem)
+  arquivoRetorno.novaLinha()
+}
+
+// Função GET historico-pessoa
+def getHistPessoaFisica(filtro){
+  return fontePessoaFisica.buscaHistorico(criterio: filtro, campos: "id, nome, cpf, inicioVigencia",ordenacao: "inicioVigencia desc", primeiro: true)     
+}
+	
+// ------------------------- Arquivos de Retorno -------------------------
+arquivoBackupAtualizacao = Arquivo.novo("Backup_historico-pessoa_contaBancaria_ATUALIZADOS.txt", 'txt', [encoding: 'iso-8859-1']) 
+arquivoBackupCriacao = Arquivo.novo("Backup_historico-pessoa_contaBancaria_CADASTRADAS.txt", 'txt', [encoding: 'iso-8859-1']) 
+
+// Lista das contas cadastradas
+contasCadastradas = Arquivo.novo('listagem_contas_CADASTRADAS.csv', 'csv', [ encoding: 'UTF-8', delimitador: ';' ]);
+contasCadastradas.escrever("ID_Pessoa Fisica;Nome Pessoa Fisica;CPF;Conta Anterior;Nova Conta Principal;Observação")
+contasCadastradas.novaLinha()
+
+// Lista das contas atualizadas
+contasAtualizadas = Arquivo.novo('listagem_contas_ATUALIZADAS.csv', 'csv', [ encoding: 'UTF-8', delimitador: ';' ]);
+contasAtualizadas.escrever("ID_Pessoa Fisica;Nome Pessoa Fisica;CPF;Conta Anterior;Nova Conta Principal;Observação")
+contasAtualizadas.novaLinha()
+
+// ------------------------- Processamento dos dados ------	-------------------
+fontePessoaFisica = Dados.pessoal.v2.pessoaFisica;
+dadosEnvioPut = [] // Lista com os dados que devem ser ATUALIZADOS
+dadosEnvioCadastro = [] // Lista com os dados que devem ser CRIADOS
+//backupArray = [] // Lista para o backup dos dados
+countLinha = 1 // Contador de linha
+
+def arquivo = Arquivo.ler(parametros.arquivo.valor, 'csv', [encoding: 'UTF-8'] /*[encoding: 'iso-8859-1']*/ )
+while(arquivo.contemProximaLinha()){
+  
+  // ******* ALTERAR CONFORME O ARQUIVO DE ENTRADA *******
+  def registro = arquivo.lerLinha().split(";") // VERIFICAR O ENCODING DO ARQUIVO CSV -> UTILIZAR UTF-8
+  println "Lendo linha nº ${countLinha}"
+  println "Linha completa: ${registro}"  
+  cpfBeneficiario = registro.getAt(0).replace("-","") 
+  println "CPF Extraído: ${cpfBeneficiario} (Tamanho: ${cpfBeneficiario.length()}) | Encoding: (CSV UTF-8 BOOM)"
+  
+  // Dados da conta bancária
+  numeroAgencia = registro.getAt(4)
+  numeroConta = registro.getAt(5).trim()
+  digitoConta = registro.getAt(6)
+  tipoConta = registro.getAt(7).trim() 
+  
+  println "Dados coletados do arquivo: [ CPF: ${cpfBeneficiario} | Num. Agência: ${numeroAgencia} | Num. Conta: ${numeroConta} | DV: ${digitoConta} | Tipo Conta: ${tipoConta} ]"
+  filtroPessoaFisica = "cpf like '%${cpfBeneficiario}%'"
+  dadosPessoaFisica = getHistPessoaFisica(filtroPessoaFisica)
+  if (dadosPessoaFisica.cpf.contains(cpfBeneficiario)) {
+    idHistorico = dadosPessoaFisica.id 
+    nome = dadosPessoaFisica.nome 
+    cpf = dadosPessoaFisica.cpf 
+    idAgencia = 49166 // ID chumbado por não haver outra agência vinculada
+    
+    // Tratativa para retornar o ID da agência bancária
+    /*
+    fonteAgenciasBancarias = Dados.pessoal.v2.agenciasBancarias;
+    dadosAgenciasBancarias = fonteAgenciasBancarias.busca(criterio: "numero = '$numeroAgencia'", campos: "id, numero, digito", primeiro: true)   
+    if(dadosAgenciasBancarias.numero.contains(numeroAgencia)){
+      println "Agência encontrada no sistema: [ Numero: ${dadosAgenciasBancarias.numero} | ID: ${dadosAgenciasBancarias.id} ]"
+      idAgencia = dadosAgenciasBancarias.id
+    }
+	*/
+    
+    // Dados bancarios da pessoa fisica
+    dadosHistoricoPessoaConta = [
+      "id": idHistorico,
+      "nome": nome,
+      "cpf": cpf,
+      "numeroConta": numeroConta,
+      "digitoConta": digitoConta,
+      "idAgencia": idAgencia,
+      "idConta": null,
+      "tipoConta": tipoConta,
+      "mensagem": null,
+      "idContaAntiga": null,
+      "numeroContaAntiga": null     
+    ]
+    println "Nome pessoa: ${nome}"
+    // ------------------------- Cenários de validações da conta bancária -------------------------
+    contasBancarias = []
+    idContaAntiga = null
+    numeroContaAntiga = null
+    dadosConta = fontePessoaFisica.buscaContaBancaria(campos: "id, agencia(numero), numero, digito, principal", parametros:["pessoaFisicaId":idHistorico])
+    dadosConta.each { itemConta ->
+      if(itemConta.principal == true){
+        idContaAntiga = itemConta.id // Retorna ID da conta que está como principal
+        numeroContaAntiga = itemConta.numero // Retorna numero da conta que está como principal
+      }
+      contasBancarias << [
+        idConta: itemConta.id,
+        numero: itemConta.numero,
+        digito: itemConta.digito,
+        principal: itemConta.principal
+      ]
+    }
+    // Validação se a conta bancária já está cadastrada ou não
+    if (contasBancarias.any { it.numero == numeroConta }) {    
+      
+      def contaExistente = contasBancarias.find { it.numero == numeroConta} // Retornando a conta bancária que corresponde ao da linha lida no arquivo
+      
+      if(contaExistente.principal == false){
+        dadosHistoricoPessoaConta.idConta = contaExistente.idConta
+        dadosHistoricoPessoaConta.idContaAntiga = idContaAntiga
+        dadosHistoricoPessoaConta.numeroContaAntiga = numeroContaAntiga
+        dadosHistoricoPessoaConta.mensagem = "Conta bancária foi atualizada para principal."
+        escreverArquivo(dadosHistoricoPessoaConta, contasAtualizadas)  
+        
+        bodyPut = montarConteudoAtualizacao(dadosHistoricoPessoaConta, arquivoBackupAtualizacao, token)
+        dadosEnvioPut << bodyPut
+        //println JSON.escrever(bodyPut)
+        println "ENTROU NO CENARIO 1: Atualizando a conta bancária para principal. [ Nova Conta Principal: ${numeroConta} | Antiga Conta Principal: ${numeroContaAntiga} ]"     
+      }else{
+        println "ENTROU NO CENARIO 3: Conta já cadastrada e configurada como principal. Ignorando qualquer alteração."
+        
+        countLinha++
+        println "----------------------------------------------------------------------------------------------"
+        continue // Ignorando o restante da iteração do loop while  
+      } 
+    }else{
+      dadosHistoricoPessoaConta.idContaAntiga = idContaAntiga
+      dadosHistoricoPessoaConta.numeroContaAntiga = numeroContaAntiga 
+      dadosHistoricoPessoaConta.mensagem = "Conta bancária número: ${numeroConta} cadastrada com sucesso!"
+      escreverArquivo(dadosHistoricoPessoaConta, contasCadastradas)
+      bodyPost = montarConteudoCriacao(dadosHistoricoPessoaConta, arquivoBackupCriacao, token)
+      dadosEnvioCadastro << bodyPost
+      println "ENTROU NO CENARIO 2: Cadastrando uma nova conta bancária." 
+      //println JSON.escrever(bodyPost)
+    }
+  }
+  println "----------------------------------------------------------------------------------------------"
+  countLinha++
+    // fim da linha, pula para a proxima
+    } // fim do while
+
+// ------------------------- Execução da requisição HTTP e Retorno dos arquivos -------------------------
+
+// Atualizando a conta bancária
+if(dadosEnvioPut.size() > 0){
+  println "Envio: "+ JSON.escrever(dadosEnvioPut)
+  enviaLotes(dadosEnvioPut, MAX, urlCaminho)
+}
+
+// Cadastrando a nova conta bancária
+if(dadosEnvioCadastro.size() > 0){
+  println "Envio: "+ JSON.escrever(dadosEnvioCadastro)
+  enviaLotes(dadosEnvioCadastro, MAX, urlCaminho)
+}
+
+// Retornado a Lista de Alterações e o Arquivo de Backup
+Resultado.arquivo(contasAtualizadas);
+Resultado.arquivo(contasCadastradas);
+Resultado.arquivo(arquivoBackupAtualizacao);
+Resultado.arquivo(arquivoBackupCriacao);
